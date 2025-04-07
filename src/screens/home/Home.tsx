@@ -4,7 +4,7 @@ import * as Clipboard from "expo-clipboard";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import { getStorageItem } from "../../utils/localStorage";
-import { gerarSenha } from "../../services/password/passwordService";
+import { gerarSenha, savePassword } from "../../services/password/passwordService";
 import AppLink from "../../components/appLink/AppLink";
 import Button from "../../components/Button";
 
@@ -14,6 +14,7 @@ export default function Home({ navigation }) {
   const handleGerarSenha = () => {
     const novaSenha = gerarSenha();
     setPassword(novaSenha);
+    savePassword(novaSenha);
   };
 
   const copiarSenha = async () => {
@@ -92,25 +93,5 @@ const styles = StyleSheet.create({
   },
   buttonsColumn: {
     width: "80%",
-  },
-  button: {
-    padding: 15,
-    borderRadius: 8,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-    backgroundColor: "#9a9b9b",
-  },
-
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-
-  pressed: {
-    opacity: 0.6,
-    transform: [{ scale: 0.98 }],
   },
 });
