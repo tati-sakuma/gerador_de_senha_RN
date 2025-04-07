@@ -5,6 +5,8 @@ import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import { getStorageItem } from "../../utils/localStorage";
 import { gerarSenha } from "../../services/password/passwordService";
+import AppLink from "../../components/appLink/AppLink";
+import Button from "../../components/Button";
 
 export default function Home({ navigation }) {
   const [password, setPassword] = useState("");
@@ -42,26 +44,15 @@ export default function Home({ navigation }) {
       <Text style={styles.passwordText}>{password || "Senha gerada"}</Text>
 
       <View style={styles.buttonsColumn}>
-        <Pressable
-          onPress={handleGerarSenha}
-          style={({ pressed }) => [styles.button, pressed && { opacity: 0.7 }]}
-        >
-          <Text style={styles.buttonText}>Gerar</Text>
-        </Pressable>
+        <Button title="Gerar Senha" onPress={handleGerarSenha}></Button>
 
-        <Pressable
-          onPress={copiarSenha}
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-        >
-          <Text style={styles.buttonText}>Copiar</Text>
-        </Pressable>
+        <Button title="Copiar" onPress={copiarSenha}></Button>
 
-        <Pressable
-          onPress={() => navigation.navigate("History")}
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-        >
-          <Text style={styles.buttonText}>Ver histórico de senhas</Text>
-        </Pressable>
+        <AppLink
+          text="Ver histórico de senhas"
+          route="History"
+          navigation={navigation}
+        />
       </View>
       <StatusBar style="light" />
     </LinearGradient>

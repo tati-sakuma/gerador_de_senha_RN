@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import Button from "../Button";
 
 interface AppLinkProps {
   text: string;
@@ -10,12 +10,8 @@ export default function AppLink({ text, route, navigation }: AppLinkProps) {
   const changeRoute = () => {
     navigation.navigate(route);
   };
+
   return (
-    <Text
-      onPress={changeRoute}
-      style={{ color: "#fb2d5d", fontSize: 20, fontWeight: "bold" }}
-    >
-      {text}
-    </Text>
+    <Button title={text} onPress={changeRoute} />
   );
 }
