@@ -1,12 +1,33 @@
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, Alert } from "react-native";
+import { getPasswords, clearPasswords } from "../../services/password/passwordService";
+import Button from "../../components/Button"; 
 import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
-import { Image, StyleSheet, Text, View } from "react-native";
-import AppLink from "../../components/appLink/AppLink";
-import { useState } from "react";
 
-export default function History({ navigation }) {
+export default function History() {
+  const [password, setPassword] = useState<string[]>([]);
 
-    const [passwords, setPasswords] = useState([]);
+  const carregarSenhas = async () => {
+    const data = await getPasswords();
+    setPassword(data);
+  };
+
+  const limparHistorico = () => {
+    Alert.alert("Confirmação", "Deseja apagar todo o histórico de senhas?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Limpar",
+        onPress: async () => {
+          await clearPasswords();
+          setPassword([]);
+        },
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    carregarSenhas();
+  }, []);
 
   return (
     <LinearGradient
@@ -15,29 +36,21 @@ export default function History({ navigation }) {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
-      <Text style={styles.title}>Histórico de senhas</Text>
-      <Image
-        source={require("../../../assets/cadeado.png")}
-        style={styles.logo}
-      />
+        <Text style={styles.title}>HISTÓRICO DE SENHAS</Text>
 
-      <View style={styles.buttonsColumn}>
-        <Text style={styles.passwordText}>
-          {"\n"}
-          Senha 1: 12345678
-          {"\n"}
-          Senha 2: 87654321
-          {"\n"}
-          Senha 3: 1234abcd
-          {"\n"}
-        </Text>
-        <AppLink
-          text="Voltar"
-          route="Home"
-          navigation={navigation}
+        <FlatList
+          data={password}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item }) => <Text style={styles.itemText}>{item}</Text>}
+          contentContainerStyle={{ alignItems: "center" }}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>Nenhuma senha armazenada.</Text>
+          }
         />
+
+      <View style={{ width: '60%', paddingTop: 40}} >
+      <Button title="LIMPAR" onPress={limparHistorico} />
       </View>
-      <StatusBar style="light" />
     </LinearGradient>
   );
 }
@@ -49,12 +62,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#ffffff",
     padding: 20,
-  },
-  logo: {
-    width: 160,
-    height: 160,
-    marginBottom: 20,
-    resizeMode: "contain",
   },
   title: {
     fontSize: 30,
@@ -73,7 +80,14 @@ const styles = StyleSheet.create({
     width: "80%",
     textAlign: "center",
   },
-  buttonsColumn: {
-    width: "80%",
+  itemText: {
+    fontSize: 18,
+    color: "#333",
+    marginVertical: 4,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#9a9b9b",
+    marginTop: 20,
   },
 });

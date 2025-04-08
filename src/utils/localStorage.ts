@@ -10,7 +10,6 @@ export async function getStorageItem (item) {
         console.error("Erro ao recuperar um item do storage.", error);
     }
     
-
     return value;
 }
 export async function setStorageItem(item: string, value: string) {

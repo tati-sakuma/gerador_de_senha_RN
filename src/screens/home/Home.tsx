@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, Alert, Image } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import { getStorageItem } from "../../utils/localStorage";
 import { gerarSenha, savePassword } from "../../services/password/passwordService";
 import AppLink from "../../components/appLink/AppLink";
 import Button from "../../components/Button";
