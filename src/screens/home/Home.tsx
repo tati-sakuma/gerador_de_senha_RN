@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { gerarSenha, savePassword } from "../../services/password/passwordService";
 import AppLink from "../../components/appLink/AppLink";
 import Button from "../../components/Button";
+import Logo from "../../components/Logo";
 
 export default function Home({ navigation }) {
   const [password, setPassword] = useState("");
@@ -37,13 +38,10 @@ export default function Home({ navigation }) {
       end={{ x: 1, y: 1 }}
     >
       <Text style={styles.title}>Gerador de senhas</Text>
-      <Image
-        source={require("../../../assets/cadeado.png")}
-        style={styles.logo}
-      />
-      <Text style={styles.passwordText}>{password || "Senha gerada"}</Text>
+      <Logo></Logo>
 
       <View style={styles.buttonsColumn}>
+      <Text style={styles.passwordText}>{password || "Senha gerada"}</Text>
         <Button title="Gerar Senha" onPress={handleGerarSenha}></Button>
 
         <Button title="Copiar" onPress={copiarSenha}></Button>
@@ -91,6 +89,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonsColumn: {
+    alignItems: "center",
     width: "80%",
   },
 });
