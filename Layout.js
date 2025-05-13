@@ -7,16 +7,19 @@ import History from "./src/screens/history/History";
 import Login from "./src/screens/login/Login";
 import SignUp from "./src/screens/login/SignUp";
 import TestApi from "./src/screens/testApi/testApi";
+import { useAuth } from "./src/hooks/useAuth";  
+
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+export default function Layout() {
+  const {authState, onLogout} = useAuth(); 
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }
     }>
       <NavigationContainer>
         <Stack.Navigator>
-        <Stack.Screen
+          <Stack.Screen
             name="TesteApi"
             component={TestApi}
             options={{
