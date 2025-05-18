@@ -9,6 +9,7 @@ import {
 interface ButtonProps {
   title: string;
   onPress: (event: GestureResponderEvent) => void;
+  disabled?: boolean;
 }
 
 export default function Button({ title, onPress }: ButtonProps) {
@@ -42,4 +43,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     transform: [{ scale: 0.98 }],
   },
+  disabled: {
+  backgroundColor: "#cccccc",
+},
 });

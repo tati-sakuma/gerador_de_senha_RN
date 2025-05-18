@@ -4,17 +4,23 @@ import Button from "../../components/Button";
 import { TextInput } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import Logo from "../../components/Logo";
+import { signIn } from '../../services/auth/authService';
+import { useAuth } from "../../hooks/useAuth";
+
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const { onLogin} = useAuth();
 
-  const handleLogin = () => {
-    if (email === "tati" && senha === "tati") {
+  const signIn = async () => {
+    try {
+      await onLogin(email, senha);
       navigation.navigate("Home");
-    } else {
+    } catch (error) {
       Alert.alert("Erro", "E-mail ou senha inválidos");
     }
+
   };
 
   return (
@@ -42,7 +48,7 @@ export default function Login({ navigation }) {
         onChangeText={setSenha}
       />
 
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Login" onPress={signIn} />
       <Text style={styles.subtitle}>Não tem uma conta? Registre-se!</Text>
       <Button
         title="Criar conta"

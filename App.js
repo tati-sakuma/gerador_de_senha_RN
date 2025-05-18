@@ -1,7 +1,7 @@
 import Layout from './Layout';
 import { AuthProvider } from './src/contexts/authContext.tsx'
 
-function App() {
+export default function App() {
   return (
     <AuthProvider>
       <Layout></Layout>

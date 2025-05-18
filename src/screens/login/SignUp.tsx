@@ -1,57 +1,72 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import Button from "../../components/Button";
 import { TextInput } from "react-native-gesture-handler";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function NewUser({ navigation }) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const { onRegister } = useAuth();
 
-  const handleRegister = () => {
-    if (senha !== confirmarSenha) {
-      Alert.alert("Erro", "As senhas não coincidem.");
-      return;
+  const isValidForm = useMemo(() => {
+    return (
+      senha === confirmarSenha &&
+      !!nome &&
+      !!email &&
+      !!senha &&
+      !!confirmarSenha
+    );
+  }, [nome, email, senha, confirmarSenha]);
+
+  const register = async () => {
+    try {
+      await onRegister(nome, email, senha, confirmarSenha);
+      Alert.alert("Sucesso", "Usuário registrado com sucesso!");
+      navigation.navigate("Login");
+    } catch (error) {
+      Alert.alert("Erro", error.message);
     }
-    Alert.alert("Sucesso", "Usuário registrado com sucesso!");
-    navigation.navigate("Login"); // Navega para a tela de login após o registro
-  };
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registrar</Text>
 
       <TextInput
-        style={styles.input}
-        placeholder="Nome"
-        value={nome}
-        onChangeText={setNome}
+      style={styles.input}
+      placeholder="Nome"
+      value={nome}
+      onChangeText={setNome}
       />
 
       <TextInput
-        style={styles.input}
-        placeholder="E-mail"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
+      style={styles.input}
+      placeholder="E-mail"
+      value={email}
+      onChangeText={setEmail}
+      keyboardType="email-address"
       />
 
       <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        value={email}
-        onChangeText={setSenha}
+      style={styles.input}
+      placeholder="Senha"
+      value={senha}
+      onChangeText={setSenha}
+      secureTextEntry
       />
 
       <TextInput
-        style={styles.input}
-        placeholder="Confimar Senha"
-        value={email}
-        onChangeText={setConfirmarSenha}
+      style={styles.input}
+      placeholder="Confirmar Senha"
+      value={confirmarSenha}
+      onChangeText={setConfirmarSenha}
+      secureTextEntry
       />
 
-      <Button title="Cadastrar" onPress={handleRegister} />
+      <Button title="Cadastrar" disabled={!isValidForm} onPress={register} />
     </View>
   );
 }

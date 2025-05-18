@@ -3,14 +3,14 @@ import api from '../../utils/api';
 export type SignUpDTO = {
     name: string;
     email: string;
-    password: string;
-    confirmPassword: string;
+    senha: string;
+    confirmarSenha: string;
 }
 
-export const signIn = (email, password) => {
+export const signIn = (email, senha) => {
     return api.post('/auth/signin', { 
         email, 
-        password,
+        senha,
     });
 };
 
