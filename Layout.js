@@ -8,6 +8,7 @@ import Login from "./src/screens/login/Login";
 import SignUp from "./src/screens/login/SignUp";
 import TestApi from "./src/screens/testApi/testApi";
 import { useAuth } from "./src/hooks/useAuth";
+import { Text } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,7 @@ export default function Layout() {
       <NavigationContainer>
         <Stack.Navigator>
 
-          {!authState.autenticated ? (
+          {!authState.authenticated ? (
             <>
               <Stack.Screen
                 name="Login"
@@ -44,7 +45,7 @@ export default function Layout() {
                 component={Home}
                 options={{
                   title: "Gerador de Senhas",
-                  headerRight: () => <Text onPress={() => onLogout}>Sair</Text>,
+                  headerRight: () => <Text onPress={onLogout}>Sair</Text>,
                   // headerShown: false 
                 }}
               />

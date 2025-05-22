@@ -14,7 +14,7 @@ interface AuthContextProps {
     authenticated: boolean | null;
   };
   onRegister?: (
-    name: string,
+    nome: string,
     email: string,
     senha: string,
     confirmarSenha: string
@@ -33,7 +33,7 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-const TOKEN_KEY = "acess-token";
+const TOKEN_KEY = "access-token";
 
 //Responsável por criar o contexto de Auth
 export const AuthContext = createContext<AuthContextProps>({});
@@ -47,31 +47,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //Responsável por pegar o token inicial
   useEffect(() => {
     const loadToken = async () => {
-      const loadToken = async () => {
-        const token = await localStorage.getStorageItem(TOKEN_KEY);
-        //adiciona ao header, se existir
-        if (token) {
-          api.defaults.headers.common["Authorization"] = `${token}`;
+      const token = await localStorage.getStorageItem(TOKEN_KEY);
+      //adiciona ao header, se existir
+      if (token) {
+        api.defaults.headers.common["Authorization"] = `${token}`;
 
-          setAuthState({
-            token: token,
-            authenticated: true,
-          });
-        }
-      };
+        setAuthState({
+          token: token,
+          authenticated: true,
+        });
+      }
     };
 
     loadToken();
   }, []);
 
   const register = async (
-    name: string,
+    nome: string,
     email: string,
     senha: string,
     confirmarSenha: string
   ) => {
     try {
-      await signUp({ name, email, senha, confirmarSenha });
+      await signUp({ nome, email, senha, confirmarSenha });
     } catch (error) {
       console.error("Erro ao registrar", error);
       throw error;
@@ -84,14 +82,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setAuthState({
         authenticated: true,
-        token: result.token,
+        token: result,
       });
 
       // todas as requisições que forem feitas depois disso vão ter o token no header
-      api.defaults.headers.common["Authorization"] = `${result.token}`;
+      api.defaults.headers.common["Authorization"] = `${result}`;
 
       //salva o token no localStorage
-      await localStorage.setStorageItem(TOKEN_KEY, result.token);
+      await localStorage.setStorageItem(TOKEN_KEY, result);
 
       return result;
     } catch (error) {

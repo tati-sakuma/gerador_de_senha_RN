@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Alert, Image } from "react-native";
+import { StyleSheet, Text, View, Alert, Image, Modal } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
@@ -7,9 +7,12 @@ import { gerarSenha, savePassword } from "../../services/password/passwordServic
 import AppLink from "../../components/appLink/AppLink";
 import Button from "../../components/Button";
 import Logo from "../../components/Logo";
+import { TextInput } from "react-native-gesture-handler";
 
 export default function Home({ navigation }) {
   const [password, setPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [nomeSenha, setNomeSenha] = useState("");
 
   const handleGerarSenha = () => {
     const novaSenha = gerarSenha();
@@ -30,6 +33,15 @@ export default function Home({ navigation }) {
     }
   };
 
+  const salvarSenha = async () => {
+    if (password) {
+      setModalVisible(true);
+    } else {
+      Alert.alert("Atenção", "Gere uma senha antes de tentar copiar.");
+    }
+  };
+
+
   return (
     <LinearGradient
       colors={["#fb2d5d", "#FFAFBD", "white", "white", "#FFAFBD", "#fb2d5d"]}
@@ -44,6 +56,8 @@ export default function Home({ navigation }) {
       <Text style={styles.passwordText}>{password || "Senha gerada"}</Text>
         <Button title="Gerar Senha" onPress={handleGerarSenha}></Button>
 
+        <Button title="Salvar" onPress={salvarSenha}></Button>
+
         <Button title="Copiar" onPress={copiarSenha}></Button>
 
         <AppLink
@@ -53,6 +67,36 @@ export default function Home({ navigation }) {
         />
       </View>
       <StatusBar style="light" />
+
+      <Modal visible={modalVisible} transparent animationType="fade">
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000000aa" }}>
+          <View style={{ backgroundColor: "#fff", padding: 20, borderRadius: 10, width: "80%" }}>
+            <Text>Digite um nome para a senha:</Text>
+            <TextInput
+              placeholder="Nome da senha"
+              value={nomeSenha}
+              onChangeText={setNomeSenha}
+              style={{ borderBottomWidth: 1, marginTop: 10, marginBottom: 20 }}
+            />
+            <Button
+              title="Salvar"
+              onPress={() => {
+                if (!nomeSenha) {
+                  Alert.alert("Erro", "Digite um nome.");
+                  return;
+                }
+
+                // aqui você salva
+                console.log("Salvando senha:", { nome: nomeSenha, senha: password });
+                setModalVisible(false);
+                setNomeSenha("");
+                Alert.alert("Sucesso", "Senha salva com sucesso.");
+              }}
+            />
+            <Button title="Cancelar" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
     </LinearGradient>
   );
 }

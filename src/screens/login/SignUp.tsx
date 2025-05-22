@@ -23,13 +23,23 @@ export default function NewUser({ navigation }) {
 
   const register = async () => {
     try {
+      if (senha !== confirmarSenha) {
+        Alert.alert("Erro", "As senhas não coincidem.");
+        return;
+      }
       await onRegister(nome, email, senha, confirmarSenha);
       Alert.alert("Sucesso", "Usuário registrado com sucesso!");
       navigation.navigate("Login");
-    } catch (error) {
-      Alert.alert("Erro", error.message);
+    } catch (error: any) {
+      console.error("Erro ao registrary", error);
+      const msg =
+        error.response?.data?.message || // se for erro vindo do backend (ex: JSON com "message")
+        error.message ||                 // se for erro do próprio JS/Error
+        "Erro desconhecido";
+
+      Alert.alert("Erro", msg);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
