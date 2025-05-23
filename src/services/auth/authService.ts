@@ -11,7 +11,6 @@ export const signUp = (data: SignUpDTO) => {
   const dto = authMapper.getSignUpDTO(data);
   return authResource
     .signUp(dto)
-    .then((response) => getSignUpResponse(response.data));
 };
 
 export const signOut = () => {

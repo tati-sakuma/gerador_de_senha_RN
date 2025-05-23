@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { signIn, signUp } from "../services/auth/authService";
 import api from "../utils/api";
 import * as localStorage from "../utils/localStorage";
@@ -16,6 +11,7 @@ interface AuthContextProps {
   onRegister?: (
     nome: string,
     email: string,
+    dataNascimento: Date,
     senha: string,
     confirmarSenha: string
   ) => Promise<any>;
@@ -50,7 +46,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const token = await localStorage.getStorageItem(TOKEN_KEY);
       //adiciona ao header, se existir
       if (token) {
-        api.defaults.headers.common["Authorization"] = `${token}`;
+        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         setAuthState({
           token: token,
@@ -65,11 +61,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const register = async (
     nome: string,
     email: string,
+    dataNascimento: Date,
     senha: string,
     confirmarSenha: string
   ) => {
     try {
-      await signUp({ nome, email, senha, confirmarSenha });
+      await signUp({ nome, email, dataNascimento, senha, confirmarSenha });
     } catch (error) {
       console.error("Erro ao registrar", error);
       throw error;
@@ -78,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const login = async (email: string, senha: string) => {
     try {
-      const result = await signIn({email, senha});
+      const result = await signIn({ email, senha });
 
       setAuthState({
         authenticated: true,
@@ -86,7 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       // todas as requisições que forem feitas depois disso vão ter o token no header
-      api.defaults.headers.common["Authorization"] = `${result}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${result}`;
 
       //salva o token no localStorage
       await localStorage.setStorageItem(TOKEN_KEY, result);

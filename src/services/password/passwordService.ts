@@ -1,4 +1,6 @@
-import { getStorageItem, setStorageItem } from "../../utils/localStorage";
+import * as passwordResource from './passwordResource';
+import { SenhaDTO } from "./passwordResource";
+
 
 export function gerarSenha(tamanho = 8) {
   const charset =
@@ -10,29 +12,16 @@ export function gerarSenha(tamanho = 8) {
   return senha;
 }
 
-export const savePassword = async (password: string) => {
-  try {
-    const saved = await getStorageItem("passwords");
-    const history = saved ? JSON.parse(saved) : [];
-
-    history.push(password);
-
-    await setStorageItem("passwords", JSON.stringify(history));
-  } catch (error) {
-    console.error("Erro ao salvar a senha.", error);
-  }
+export const savePassword = async (nomeSenha: string, senha: string) => {
+  await passwordResource.createPassword(nomeSenha, senha)
 };
 
-export const getPasswords = async (): Promise<string[]> => {
-  try {
-    const saved = await getStorageItem("passwords");
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Erro ao recuperar as senhas.", error);
-    return [];
-  }
-};
+export async function getUserPasswords(): Promise<SenhaDTO[]> {
+  // Se a API já retorna um array de SenhaDTO, recebemos direto:
+  const items = await passwordResource.getUserPasswords();
+  return items;
+}
 
-export const clearPasswords = async () => {
-  await setStorageItem("passwords", JSON.stringify([]));
-};
+export async function deletePassword(senhaId: string) {
+  await passwordResource.deletePassword(senhaId)
+}

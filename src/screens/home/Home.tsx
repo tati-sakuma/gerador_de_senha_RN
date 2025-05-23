@@ -8,6 +8,7 @@ import AppLink from "../../components/appLink/AppLink";
 import Button from "../../components/Button";
 import Logo from "../../components/Logo";
 import { TextInput } from "react-native-gesture-handler";
+import api from "../../utils/api";
 
 export default function Home({ navigation }) {
   const [password, setPassword] = useState("");
@@ -17,7 +18,6 @@ export default function Home({ navigation }) {
   const handleGerarSenha = () => {
     const novaSenha = gerarSenha();
     setPassword(novaSenha);
-    savePassword(novaSenha);
   };
 
   const copiarSenha = async () => {
@@ -83,14 +83,27 @@ export default function Home({ navigation }) {
               onPress={() => {
                 if (!nomeSenha) {
                   Alert.alert("Erro", "Digite um nome.");
+                  savePassword(nomeSenha, password);
                   return;
                 }
 
                 // aqui você salva
                 console.log("Salvando senha:", { nome: nomeSenha, senha: password });
-                setModalVisible(false);
-                setNomeSenha("");
-                Alert.alert("Sucesso", "Senha salva com sucesso.");
+
+                api.post("/senha", {
+                  nome: nomeSenha,
+                  senha: password,
+                })
+                .then(() => {
+                  setModalVisible(false);
+                  setNomeSenha("");
+                  Alert.alert("Sucesso", "Senha salva com sucesso.");
+                  navigation.navigate("History");
+                })
+                .catch((error) => {
+                  console.error("Erro ao salvar senha:", error);
+                  Alert.alert("Erro", "Não foi possível salvar a senha.");
+                });
               }}
             />
             <Button title="Cancelar" onPress={() => setModalVisible(false)} />
